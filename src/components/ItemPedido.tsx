@@ -87,7 +87,7 @@ export default function ItemPedido({ pedido, pedidos, setPedidos }: ListaPedidoP
           "Content-type": "application/json",
           Authorization: "Bearer " + Cookies.get("admin_logado_token") as string
         },
-        body: JSON.stringify({ resposta: respostaAbrigo, aprovado: true }) // envia aprovado
+        body: JSON.stringify({ resposta: respostaAbrigo, aprovado: true })
       })
 
       if (response.ok) {
@@ -112,7 +112,7 @@ export default function ItemPedido({ pedido, pedidos, setPedidos }: ListaPedidoP
           timerProgressBar: true
         })
       }
-    } catch (error) {
+    } catch {
       MySwal.fire({
         icon: 'error',
         title: 'Erro de conexão com o servidor',

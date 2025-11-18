@@ -16,7 +16,7 @@ interface ModalAdotanteProps {
   onExcluir?: (id: number) => void
 }
 
-export default function ModalAdotante({ adotante, fechar, onAtualizar, onExcluir }: ModalAdotanteProps) {
+export default function ModalAdotante({ adotante, fechar, onAtualizar, }: ModalAdotanteProps) {
   const [nome, setNome] = useState('')
   const [fone, setFone] = useState('')
   const [endereco, setEndereco] = useState('')
