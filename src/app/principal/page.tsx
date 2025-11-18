@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 export default function Principal() {
   // Informações do abrigo (somente leitura, editáveis pelo dev)
