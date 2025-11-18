@@ -5,6 +5,7 @@ import { AnimalI, FotoI } from '@/utils/types/animais'
 import Cookies from 'js-cookie'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import Image from 'next/image'
 
 const MySwal = withReactContent(Swal)
 
@@ -68,7 +69,7 @@ export default function ModalEditarAnimal({
         const erro = await response.text()
         toast('error', 'Erro ao atualizar foto: ' + erro)
       }
-    } catch (error) {
+    } catch (_err) {
       toast('error', 'Erro de conexão com o servidor.')
     }
   }
@@ -93,7 +94,7 @@ export default function ModalEditarAnimal({
           castracao,
           disponivel,
           especieId: animal.especie.id,
-          fotos: novasFotos, // adiciona novas fotos
+          fotos: novasFotos,
         }),
       })
       if (!response.ok) {
@@ -110,8 +111,8 @@ export default function ModalEditarAnimal({
       toast('success', '✅ Animal atualizado com sucesso!')
       if (atualizarAnimal) atualizarAnimal()
       fechar()
-    } catch (error) {
-      console.error(error)
+    } catch (_err) {
+      console.error(_err)
       toast('error', '⚠️ Erro de conexão com o servidor.')
     } finally {
       setLoading(false)
@@ -214,7 +215,11 @@ export default function ModalEditarAnimal({
           <h3 className="font-semibold mb-2">Fotos Existentes</h3>
           {fotos.map((foto, idx) => (
             <div key={foto.id} className="mb-2 flex items-center gap-2">
-              <img src={foto.codigoFoto} alt={foto.descricao} className="w-16 h-16 object-cover rounded" />
+              <img
+                src={foto.codigoFoto}
+                alt={foto.descricao}
+                className="w-16 h-16 object-cover rounded"
+              />
               <input
                 type="text"
                 value={foto.descricao}
