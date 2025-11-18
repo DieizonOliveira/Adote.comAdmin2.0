@@ -2,6 +2,7 @@
 import { AnimalI } from "./animais";
 import { AdotanteI } from "./adotantes";
 import { PedidoI } from "./pedidos";
+import { AcompanhamentoI } from "./acompanhamento"; // ✅ import do tipo correto
 
 export interface AdocaoI {
   id: number;
@@ -10,8 +11,8 @@ export interface AdocaoI {
   pedidoId?: number | null;
   animalId: number;
   adotanteId: string;
-  animal: AnimalI;       // ✅ agora inclui fotos e especie
+  animal: AnimalI;       
   adotante: AdotanteI;
   pedido?: PedidoI | null;
-  acompanhamentos?: any[]; // opcional
+  acompanhamentos?: AcompanhamentoI[]; // ✅ substituído any[] pelo tipo correto
 }
