@@ -5,7 +5,6 @@ import { AnimalI, FotoI } from '@/utils/types/animais'
 import Cookies from 'js-cookie'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import Image from 'next/image'
 
 const MySwal = withReactContent(Swal)
 
@@ -46,7 +45,6 @@ export default function ModalEditarAnimal({
     })
   }
 
-  // Atualiza foto existente somente se houve alteração
   const atualizarFoto = async (foto: FotoI, idx: number) => {
     const original = animal.fotos[idx]
     if (foto.descricao === original.descricao && foto.codigoFoto === original.codigoFoto) return
@@ -69,16 +67,14 @@ export default function ModalEditarAnimal({
         const erro = await response.text()
         toast('error', 'Erro ao atualizar foto: ' + erro)
       }
-    } catch (_err) {
+    } catch {
       toast('error', 'Erro de conexão com o servidor.')
     }
   }
 
-  // Salvar alterações do animal
   const salvarAlteracoes = async () => {
     setLoading(true)
     try {
-      // Atualiza animal
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/animais/${animal.id}`, {
         method: 'PUT',
         headers: {
@@ -103,7 +99,6 @@ export default function ModalEditarAnimal({
         return
       }
 
-      // Atualiza fotos existentes somente se houver alterações
       for (let i = 0; i < fotos.length; i++) {
         await atualizarFoto(fotos[i], i)
       }
@@ -111,15 +106,13 @@ export default function ModalEditarAnimal({
       toast('success', '✅ Animal atualizado com sucesso!')
       if (atualizarAnimal) atualizarAnimal()
       fechar()
-    } catch (_err) {
-      console.error(_err)
+    } catch {
       toast('error', '⚠️ Erro de conexão com o servidor.')
     } finally {
       setLoading(false)
     }
   }
 
-  // Toggle disponibilidade do animal
   const alternarDisponibilidade = () => {
     setDisponivel(!disponivel)
     toast('success', !disponivel ? 'Animal agora disponível!' : 'Animal agora indisponível!')
@@ -130,7 +123,6 @@ export default function ModalEditarAnimal({
       <div className="bg-white p-6 rounded-xl shadow-lg w-[500px] max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold mb-4 text-gray-800 text-center">Editar Animal</h2>
 
-        {/* Nome */}
         <div className="mb-3">
           <label className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
           <input
@@ -141,7 +133,6 @@ export default function ModalEditarAnimal({
           />
         </div>
 
-        {/* Idade */}
         <div className="mb-3">
           <label className="block text-sm font-medium text-gray-700 mb-1">Idade</label>
           <input
@@ -153,7 +144,6 @@ export default function ModalEditarAnimal({
           />
         </div>
 
-        {/* Sexo */}
         <div className="mb-3">
           <label className="block text-sm font-medium text-gray-700 mb-1">Sexo</label>
           <select
@@ -166,7 +156,6 @@ export default function ModalEditarAnimal({
           </select>
         </div>
 
-        {/* Porte */}
         <div className="mb-3">
           <label className="block text-sm font-medium text-gray-700 mb-1">Porte</label>
           <select
@@ -180,7 +169,6 @@ export default function ModalEditarAnimal({
           </select>
         </div>
 
-        {/* Castração */}
         <div className="mb-3 flex items-center gap-2">
           <input
             type="checkbox"
@@ -190,7 +178,6 @@ export default function ModalEditarAnimal({
           <span className="text-gray-700">Castrado</span>
         </div>
 
-        {/* Disponibilidade */}
         <div className="mb-3 flex items-center gap-2">
           <input
             type="checkbox"
@@ -200,7 +187,6 @@ export default function ModalEditarAnimal({
           <span className="text-gray-700">{disponivel ? 'Disponível' : 'Indisponível'}</span>
         </div>
 
-        {/* Descrição */}
         <div className="mb-3">
           <label className="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
           <textarea
@@ -210,7 +196,6 @@ export default function ModalEditarAnimal({
           />
         </div>
 
-        {/* Fotos existentes */}
         <div className="mb-3">
           <h3 className="font-semibold mb-2">Fotos Existentes</h3>
           {fotos.map((foto, idx) => (
@@ -235,7 +220,6 @@ export default function ModalEditarAnimal({
           ))}
         </div>
 
-        {/* Adicionar novas fotos */}
         <div className="mb-3">
           <h3 className="font-semibold mb-2">Adicionar Fotos</h3>
           {novasFotos.map((f, idx) => (
@@ -272,7 +256,6 @@ export default function ModalEditarAnimal({
           </button>
         </div>
 
-        {/* Botões */}
         <div className="flex justify-end gap-3 mt-5">
           <button
             onClick={fechar}
