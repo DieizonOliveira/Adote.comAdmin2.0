@@ -10,15 +10,14 @@ import withReactContent from "sweetalert2-react-content"
 
 const MySwal = withReactContent(Swal)
 
-interface listaAdotanteProps {
-  adotante: AdotanteI,
-  adotantes: AdotanteI[],
+interface ListaAdotanteProps {
+  adotante: AdotanteI
+  adotantes: AdotanteI[]
   setAdotantes: React.Dispatch<React.SetStateAction<AdotanteI[]>>
 }
 
-function ItemAdotante({ adotante, adotantes, setAdotantes }: listaAdotanteProps) {
+function ItemAdotante({ adotante, adotantes, setAdotantes }: ListaAdotanteProps) {
   const [abrirModal, setAbrirModal] = useState(false)
-  // const [loading, setLoading] = useState(false)
 
   async function excluirAdotante() {
     const confirmResult = await MySwal.fire({
@@ -33,7 +32,6 @@ function ItemAdotante({ adotante, adotantes, setAdotantes }: listaAdotanteProps)
 
     if (!confirmResult.isConfirmed) return
 
-    // setLoading(true)
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/adotantes/${adotante.id}`, {
         method: "DELETE",
@@ -63,15 +61,13 @@ function ItemAdotante({ adotante, adotantes, setAdotantes }: listaAdotanteProps)
           text: 'Adotante não foi excluído'
         })
       }
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
       await MySwal.fire({
         icon: 'error',
         title: 'Erro de conexão',
         text: 'Não foi possível conectar ao servidor.'
       })
-    } finally {
-      // setLoading(false)
     }
   }
 

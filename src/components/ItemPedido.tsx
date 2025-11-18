@@ -33,29 +33,42 @@ export default function ItemPedido({ pedido, pedidos, setPedidos }: ListaPedidoP
 
     if (!result.isConfirmed) return
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/pedidos/${pedido.id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: "Bearer " + Cookies.get("admin_logado_token") as string
-      },
-    })
-
-    if (response.ok) {
-      setPedidos(pedidos.filter(x => x.id !== pedido.id))
-      MySwal.fire({
-        icon: 'success',
-        title: "Proposta excluída com sucesso",
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/pedidos/${pedido.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: "Bearer " + (Cookies.get("admin_logado_token") || "")
+        },
       })
-    } else {
-      MySwal.fire({
+
+      if (response.ok) {
+        setPedidos(pedidos.filter(x => x.id !== pedido.id))
+        await MySwal.fire({
+          icon: 'success',
+          title: "Proposta excluída com sucesso",
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true
+        })
+      } else {
+        await MySwal.fire({
+          icon: 'error',
+          title: "Erro... Proposta não foi excluída",
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true
+        })
+      }
+    } catch (err) {
+      console.error(err)
+      await MySwal.fire({
         icon: 'error',
-        title: "Erro... Proposta não foi excluída",
+        title: 'Erro de conexão com o servidor',
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
@@ -85,14 +98,14 @@ export default function ItemPedido({ pedido, pedidos, setPedidos }: ListaPedidoP
         method: "PATCH",
         headers: {
           "Content-type": "application/json",
-          Authorization: "Bearer " + Cookies.get("admin_logado_token") as string
+          Authorization: "Bearer " + (Cookies.get("admin_logado_token") || "")
         },
         body: JSON.stringify({ resposta: respostaAbrigo, aprovado: true })
       })
 
       if (response.ok) {
         setPedidos(pedidos.map(x => x.id === pedido.id ? { ...x, resposta: respostaAbrigo, aprovado: true } : x))
-        MySwal.fire({
+        await MySwal.fire({
           icon: 'success',
           title: '✅ Pedido respondido com sucesso!',
           toast: true,
@@ -102,7 +115,7 @@ export default function ItemPedido({ pedido, pedidos, setPedidos }: ListaPedidoP
           timerProgressBar: true
         })
       } else {
-        MySwal.fire({
+        await MySwal.fire({
           icon: 'error',
           title: 'Erro ao responder pedido',
           toast: true,
@@ -112,8 +125,9 @@ export default function ItemPedido({ pedido, pedidos, setPedidos }: ListaPedidoP
           timerProgressBar: true
         })
       }
-    } catch {
-      MySwal.fire({
+    } catch (err) {
+      console.error(err)
+      await MySwal.fire({
         icon: 'error',
         title: 'Erro de conexão com o servidor',
         toast: true,
@@ -126,14 +140,8 @@ export default function ItemPedido({ pedido, pedidos, setPedidos }: ListaPedidoP
   }
 
   return (
-    <tr
-      key={pedido.id}
-      className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-100 transition-colors duration-150"
-    >
-      <th
-        scope="row"
-        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-      >
+    <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-100 transition-colors duration-150">
+      <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
         <Image
           src={pedido.animal.fotos?.[0]?.codigoFoto || "/sem-foto.jpg"}
           alt={`Foto de ${pedido.animal.nome}`}
@@ -151,12 +159,7 @@ export default function ItemPedido({ pedido, pedidos, setPedidos }: ListaPedidoP
 
       <td className="px-6 py-4 text-center">
         {pedido.resposta ? (
-          <Image
-            src="/ok.png"
-            alt="Ok"
-            width={60}
-            height={60}
-          />
+          <Image src="/ok.png" alt="Ok" width={60} height={60} />
         ) : (
           <>
             <TiDeleteOutline
