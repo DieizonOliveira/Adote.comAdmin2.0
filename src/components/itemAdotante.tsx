@@ -18,7 +18,7 @@ interface listaAdotanteProps {
 
 function ItemAdotante({ adotante, adotantes, setAdotantes }: listaAdotanteProps) {
   const [abrirModal, setAbrirModal] = useState(false)
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
 
   async function excluirAdotante() {
     const confirmResult = await MySwal.fire({
@@ -33,7 +33,7 @@ function ItemAdotante({ adotante, adotantes, setAdotantes }: listaAdotanteProps)
 
     if (!confirmResult.isConfirmed) return
 
-    setLoading(true)
+    // setLoading(true)
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/adotantes/${adotante.id}`, {
         method: "DELETE",
@@ -71,7 +71,7 @@ function ItemAdotante({ adotante, adotantes, setAdotantes }: listaAdotanteProps)
         text: 'Não foi possível conectar ao servidor.'
       })
     } finally {
-      setLoading(false)
+      // setLoading(false)
     }
   }
 
