@@ -53,40 +53,82 @@ export default function Home() {
 
       <div className="max-w-sm">
         <h1 className="text-3xl font-bold my-8">Admin: Adote.com</h1>
-        <form className="max-w-sm mx-auto"
-          onSubmit={handleSubmit(verificaLogin)} >
-          
-          <div className="mb-5">
-            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-900">E-mail:</label>
-            <input 
-              type="email" 
-              id="email" 
-              placeholder="Insira seu email"
-              className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              {...register("email")}
-              required 
-            />
-          </div>
+        <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(verificaLogin)}>
 
-          <div className="mb-5">
-            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-900">Senha:</label>
-            <input 
-              type="password" 
-              id="password" 
-              placeholder="*******"
-              className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              {...register("senha")}
-              required 
-            />
-          </div>
+    <div>
+        <label 
+            htmlFor="email" 
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+            Email
+        </label>
 
-          <button 
-            type="submit" 
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Entrar
-          </button>
-        </form>
+        <input
+            type="email"
+            id="email"
+            placeholder="Login"
+            required
+            {...register("email")}
+            className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg 
+                       focus:ring-primary-600 focus:border-primary-600 
+                       block w-full p-2.5 
+                       dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                       dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+    </div>
+
+    <div>
+        <label 
+            htmlFor="password" 
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+            Senha
+        </label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="*******"
+            required
+            {...register("senha")}
+            className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg 
+                       focus:ring-primary-600 focus:border-primary-600 
+                       block w-full p-2.5 
+                       dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                       dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+    </div>
+
+    <div className="flex items-center justify-between">
+        <a 
+            href="#"
+            className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+        >
+            Esqueceu a senha?
+        </a>
+    </div>
+
+    <button
+        type="submit"
+        className="w-full text-white bg-blue-700 hover:bg-blue-800 
+                   focus:ring-4 focus:outline-none focus:ring-blue-300 
+                   font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                   dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    >
+        Entrar
+    </button>
+
+    <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+        Não tem cadastro?{" "}
+        <a 
+            href="/cadastro" 
+            className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+        >
+            Criar conta
+        </a>
+    </p>
+
+</form>
       </div>
     </main>
   );
