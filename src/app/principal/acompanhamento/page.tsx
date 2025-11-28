@@ -38,12 +38,14 @@ export default function ControleAcompanhamentos() {
           </thead>
           <tbody>
             {acompanhamentos.map(acomp => (
-              <ItemAcompanhamento
-                key={acomp.id}
-                acompanhamento={acomp}
-                acompanhamentos={acompanhamentos}
-                setAcompanhamentos={setAcompanhamentos}
-              />
+            <ItemAcompanhamento 
+            key={acomp.id}
+            acompanhamento={acomp}
+            acompanhamentos={acompanhamentos}
+            setAcompanhamentos={setAcompanhamentos}
+            statusAdocao={acomp.adocao?.status as "Ativa" | "Concluida" | "Cancelada"}
+  // <-- AQUI
+          />
             ))}
           </tbody>
         </table>

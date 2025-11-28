@@ -17,6 +17,7 @@ export interface AcompanhamentoI {
     id: number;
     animalId: number;
     adotanteId: string;
+    status: "Ativa" | "Concluida" | "Cancelada"; 
     animal?: {
       id: number;
       nome: string;
