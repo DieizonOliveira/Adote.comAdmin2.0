@@ -184,7 +184,9 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
                       acompanhamentos={acompanhamentos}
                       setAcompanhamentos={setAcompanhamentos}
                       abrirModalVisita={() => abrirModalEditar(a)}
-                      abrirModalVacina={abrirModalVacinaItem} statusAdocao={"Ativa"}                    />
+                      abrirModalVacina={abrirModalVacinaItem} 
+                      statusAdocao={statusAdocao}                
+                      />
                   ))}
                 </tbody>
               </table>
