@@ -13,9 +13,10 @@ import { createPortal } from "react-dom";
 interface Props {
   adocaoId: number;
   fechar: () => void;
+  statusAdocao: "Ativa" | "Concluida" | "Cancelada";   // <-- ADICIONADO
 }
 
-export default function ModalAcompanhamentos({ adocaoId, fechar }: Props) {
+export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }: Props) {
   const [acompanhamentos, setAcompanhamentos] = useState<AcompanhamentoI[]>([]);
   const [vacinas, setVacinas] = useState<VacinaI[]>([]);
   const [abrirRegistrar, setAbrirRegistrar] = useState(false);
@@ -110,7 +111,6 @@ export default function ModalAcompanhamentos({ adocaoId, fechar }: Props) {
 
       alert(`Adoção ${novoStatus.toLowerCase()} com sucesso!`);
 
-      // Recarrega dados
       fetchAcompanhamentos();
       fetchVacinas();
 
@@ -230,6 +230,7 @@ export default function ModalAcompanhamentos({ adocaoId, fechar }: Props) {
           <ModalRegistrarVisita
             adocaoId={adocaoId}
             acompanhamento={acompanhamentoSelecionado || undefined}
+            statusAdocao={statusAdocao}         
             fechar={() => {
               setAbrirRegistrar(false);
               setAcompanhamentoSelecionado(null);

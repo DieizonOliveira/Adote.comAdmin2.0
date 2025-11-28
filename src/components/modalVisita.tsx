@@ -7,9 +7,10 @@ interface Props {
   adocaoId: number
   fechar: () => void
   acompanhamento?: AcompanhamentoI
+  statusAdocao: "Ativa" | "Concluida" | "Cancelada"   // ✅ ADICIONADO
 }
 
-export default function ModalRegistrarVisita({ adocaoId, fechar, acompanhamento }: Props) {
+export default function ModalRegistrarVisita({ adocaoId, fechar, acompanhamento, statusAdocao }: Props) {
   const [observacoes, setObservacoes] = useState(acompanhamento?.observacoes || "")
   const [proximaVisita, setProximaVisita] = useState(
     acompanhamento?.proximaVisita
@@ -18,10 +19,14 @@ export default function ModalRegistrarVisita({ adocaoId, fechar, acompanhamento 
   )
   const [loading, setLoading] = useState(false)
 
-  // Se veio um acompanhamento → estamos editando
   const isEdit = !!acompanhamento
 
+  // 🔒 Só permite editar se adoção estiver ativa
+  const bloqueado = statusAdocao !== "Ativa"   // ⬅ REGRA
+
   const handleSalvar = async () => {
+    if (bloqueado) return alert("Adoção finalizada. Não é possível alterar visitas.")  // ⬅ BLOQUEIO
+
     if (!observacoes && !proximaVisita) {
       alert("Preencha pelo menos observações ou próxima visita.")
       return
@@ -73,6 +78,8 @@ export default function ModalRegistrarVisita({ adocaoId, fechar, acompanhamento 
   }
 
   const handleExcluir = async () => {
+    if (bloqueado) return alert("Adoção finalizada. Não é possível excluir visitas.")  // ⬅ BLOQUEIO
+
     if (!confirm("Deseja realmente excluir este acompanhamento?")) return
 
     setLoading(true)
@@ -118,9 +125,10 @@ export default function ModalRegistrarVisita({ adocaoId, fechar, acompanhamento 
           <label>
             Observações:
             <textarea
+              disabled={bloqueado}   // 🔒 BLOQUEIA INPUT
               value={observacoes}
               onChange={e => setObservacoes(e.target.value)}
-              className="w-full border rounded p-2 mt-1 text-sm"
+              className="w-full border rounded p-2 mt-1 text-sm disabled:bg-gray-200"
               rows={3}
             />
           </label>
@@ -128,10 +136,11 @@ export default function ModalRegistrarVisita({ adocaoId, fechar, acompanhamento 
           <label>
             Próxima Visita:
             <input
+              disabled={bloqueado}   // 🔒 BLOQUEIA DATA
               type="date"
               value={proximaVisita}
               onChange={e => setProximaVisita(e.target.value)}
-              className="w-full border rounded p-2 mt-1 text-sm"
+              className="w-full border rounded p-2 mt-1 text-sm disabled:bg-gray-200"
             />
           </label>
 
@@ -139,8 +148,8 @@ export default function ModalRegistrarVisita({ adocaoId, fechar, acompanhamento 
             {isEdit && (
               <button
                 onClick={handleExcluir}
-                disabled={loading}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm"
+                disabled={loading || bloqueado}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm disabled:bg-gray-300"
               >
                 {loading ? "Excluindo..." : "Excluir"}
               </button>
@@ -148,12 +157,18 @@ export default function ModalRegistrarVisita({ adocaoId, fechar, acompanhamento 
 
             <button
               onClick={handleSalvar}
-              disabled={loading}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm ml-auto"
+              disabled={loading || bloqueado}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm ml-auto disabled:bg-gray-300"
             >
               {loading ? "Salvando..." : isEdit ? "Atualizar" : "Registrar"}
             </button>
           </div>
+
+          {bloqueado && (
+            <p className="text-red-600 text-xs mt-2">
+              Esta adoção está <b>{statusAdocao}</b>. Alterações não são permitidas.
+            </p>
+          )}
         </div>
       </div>
     </div>
