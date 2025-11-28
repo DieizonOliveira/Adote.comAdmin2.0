@@ -22,9 +22,9 @@ export default function ModalAcompanhamentos({ adocaoId, fechar }: Props) {
   const [abrirVacina, setAbrirVacina] = useState(false);
   const [acompanhamentoSelecionado, setAcompanhamentoSelecionado] = useState<AcompanhamentoI | null>(null);
 
-  // =======================
+  // =============================
   // FETCH ACOMPANHAMENTOS
-  // =======================
+  // =============================
   const fetchAcompanhamentos = async () => {
     try {
       const token = Cookies.get("admin_logado_token");
@@ -42,9 +42,9 @@ export default function ModalAcompanhamentos({ adocaoId, fechar }: Props) {
     }
   };
 
-  // =======================
+  // =============================
   // FETCH VACINAS
-  // =======================
+  // =============================
   const fetchVacinas = async () => {
     try {
       const token = Cookies.get("admin_logado_token");
@@ -67,9 +67,9 @@ export default function ModalAcompanhamentos({ adocaoId, fechar }: Props) {
     fetchVacinas();
   }, [adocaoId]);
 
-  // =======================
+  // =============================
   // MODAIS
-  // =======================
+  // =============================
   function abrirModalVacinaItem(acompanhamento: AcompanhamentoI) {
     setAcompanhamentoSelecionado(acompanhamento);
     setAbrirVacina(true);
@@ -83,6 +83,41 @@ export default function ModalAcompanhamentos({ adocaoId, fechar }: Props) {
   function abrirModalNovo() {
     setAcompanhamentoSelecionado(null);
     setAbrirRegistrar(true);
+  }
+
+  // =============================
+  // ALTERAR STATUS DA ADOÇÃO
+  // =============================
+  async function alterarStatus(novoStatus: "Concluida" | "Cancelada") {
+    const token = Cookies.get("admin_logado_token");
+    if (!token) return alert("Token inválido!");
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/adocao/${adocaoId}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({ status: novoStatus })
+      });
+
+      if (!res.ok) {
+        const erro = await res.json();
+        alert(erro.erro || "Erro ao alterar status.");
+        return;
+      }
+
+      alert(`Adoção ${novoStatus.toLowerCase()} com sucesso!`);
+
+      // Recarrega dados
+      fetchAcompanhamentos();
+      fetchVacinas();
+
+    } catch (error) {
+      console.error("Erro ao alterar status:", error);
+      alert("Erro inesperado.");
+    }
   }
 
   return (
@@ -99,13 +134,30 @@ export default function ModalAcompanhamentos({ adocaoId, fechar }: Props) {
 
           <h2 className="text-2xl font-bold mb-4 text-center">Acompanhamentos</h2>
 
+          {/* BOTÕES DE AÇÃO */}
           <div className="flex justify-end mb-4 gap-2">
+
             <button
               onClick={abrirModalNovo}
               className="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 text-sm"
             >
               ➕ Registrar Visita
             </button>
+
+            <button
+              onClick={() => alterarStatus("Cancelada")}
+              className="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 text-sm"
+            >
+              ❌ Cancelar Adoção
+            </button>
+
+            <button
+              onClick={() => alterarStatus("Concluida")}
+              className="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 text-sm"
+            >
+              ✔ Concluir Adoção
+            </button>
+
           </div>
 
           {/* TABELA DE ACOMPANHAMENTOS */}
@@ -139,7 +191,7 @@ export default function ModalAcompanhamentos({ adocaoId, fechar }: Props) {
             </div>
           )}
 
-          {/* TABELA DE VACINAS APLICADAS */}
+          {/* VACINAS */}
           <h3 className="text-xl font-semibold mb-2">Vacinas Aplicadas</h3>
           {vacinas.length === 0 ? (
             <p className="text-gray-500 text-sm mb-4">Nenhuma vacina aplicada.</p>
