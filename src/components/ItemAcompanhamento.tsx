@@ -2,6 +2,7 @@
 
 import { Dispatch, SetStateAction } from "react"
 import Cookies from "js-cookie"
+import Swal from "sweetalert2"
 import { AcompanhamentoI } from "@/utils/types/acompanhamento"
 import { TiDeleteOutline, TiEdit } from "react-icons/ti"
 
@@ -11,7 +12,7 @@ interface ItemAcompanhamentoProps {
   setAcompanhamentos: Dispatch<SetStateAction<AcompanhamentoI[]>>
   abrirModalVisita?: (acompanhamento: AcompanhamentoI) => void
   abrirModalVacina?: (acompanhamento: AcompanhamentoI) => void
-  statusAdocao: "Ativa" | "Concluida" | "Cancelada"   // <-- ADICIONADO
+  statusAdocao: "Ativa" | "Concluida" | "Cancelada"
 }
 
 export default function ItemAcompanhamento({
@@ -25,20 +26,31 @@ export default function ItemAcompanhamento({
 
   if (!acompanhamento) return null
 
-  const bloqueado = statusAdocao !== "Ativa"    // <-- SE NÃO ESTÁ ATIVA, BLOQUEIA
+  const bloqueado = statusAdocao !== "Ativa"
 
   async function excluirAcompanhamento() {
     if (bloqueado) {
-      alert("Adoção finalizada. Alterações não são permitidas.")
-      return
+      return Swal.fire(
+        "Ação bloqueada",
+        "A adoção já está finalizada. Alterações não são permitidas.",
+        "warning"
+      )
     }
 
-    if (!confirm("Deseja remover acompanhamento?")) return
+    const confirmar = await Swal.fire({
+      title: "Remover acompanhamento?",
+      text: "Essa ação não poderá ser desfeita.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, remover",
+      cancelButtonText: "Cancelar"
+    })
+
+    if (!confirmar.isConfirmed) return
 
     const token = Cookies.get("admin_logado_token")
     if (!token) {
-      alert("Token não encontrado. Faça login novamente.")
-      return
+      return Swal.fire("Erro", "Token não encontrado. Faça login novamente.", "error")
     }
 
     try {
@@ -52,13 +64,18 @@ export default function ItemAcompanhamento({
 
       if (res.ok) {
         setAcompanhamentos(acompanhamentos.filter(a => a.id !== acompanhamento.id))
-        alert("Acompanhamento removido com sucesso")
+        
+        Swal.fire(
+          "Removido!",
+          "O acompanhamento foi removido com sucesso.",
+          "success"
+        )
       } else {
-        alert("Erro ao remover acompanhamento")
+        Swal.fire("Erro", "Erro ao remover acompanhamento.", "error")
       }
     } catch (err) {
       console.error(err)
-      alert("Erro ao remover acompanhamento")
+      Swal.fire("Erro", "Erro ao remover acompanhamento.", "error")
     }
   }
 
@@ -94,13 +111,33 @@ export default function ItemAcompanhamento({
               ? "text-gray-400 cursor-not-allowed"
               : "text-blue-600 cursor-pointer")
           }
-          title="Editar acompanhamento"
-          onClick={() => !bloqueado && abrirModalVisita?.(acompanhamento)}
+          title={bloqueado ? "Adoção finalizada" : "Editar acompanhamento"}
+          onClick={() => {
+            if (bloqueado) {
+              Swal.fire(
+                "Ação bloqueada",
+                "A adoção não está ativa. Alterações não são permitidas.",
+                "warning"
+              )
+              return
+            }
+            abrirModalVisita?.(acompanhamento)
+          }}
         />
 
         {/* VACINAR */}
         <button
-          onClick={() => !bloqueado && abrirModalVacina?.(acompanhamento)}
+          onClick={() => {
+            if (bloqueado) {
+              Swal.fire(
+                "Ação bloqueada",
+                "A adoção não está ativa. Não é possível aplicar vacinas.",
+                "warning"
+              )
+              return
+            }
+            abrirModalVacina?.(acompanhamento)
+          }}
           title="Aplicar vacina nesta visita"
           disabled={bloqueado}
           className={
@@ -121,7 +158,7 @@ export default function ItemAcompanhamento({
               ? "text-gray-400 cursor-not-allowed"
               : "text-red-600 cursor-pointer")
           }
-          title="Excluir acompanhamento"
+          title={bloqueado ? "Adoção finalizada" : "Excluir acompanhamento"}
           onClick={excluirAcompanhamento}
         />
 
