@@ -215,7 +215,7 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
                       vacina={v}
                       vacinas={vacinas}
                       setVacinas={setVacinas}
-                      animalId={v.animalId}
+                      
                     />
                   ))}
                 </tbody>

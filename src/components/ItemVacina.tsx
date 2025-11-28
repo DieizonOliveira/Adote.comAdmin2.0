@@ -11,11 +11,10 @@ interface ItemVacinaProps {
   vacina: VacinaI;
   vacinas: VacinaI[];
   setVacinas: React.Dispatch<React.SetStateAction<VacinaI[]>>;
-  animalId: number;
 }
 
-export default function ItemVacina({ vacina, vacinas, setVacinas, animalId }: ItemVacinaProps) {
-  const [abrirEditar, setAbrirEditar] = useState(false);
+export default function ItemVacina({ vacina, vacinas, setVacinas }: ItemVacinaProps) {
+  const [abrirEditar, setAbrirEditar] = useState(false);  // <-- ESSENCIAL
 
   async function excluirVacina(vacinaId: number) {
     const result = await Swal.fire({
@@ -73,16 +72,16 @@ export default function ItemVacina({ vacina, vacinas, setVacinas, animalId }: It
       </tr>
 
       {abrirEditar && createPortal(
-  <ModalVacina
-    animalId={vacina.animalId}  // <-- CORRIGIDO
-    vacina={vacina}
-    fechar={() => setAbrirEditar(false)}
-    onAtualizar={(novaVacina) => {
-      setVacinas(vacinas.map(v => v.id === novaVacina.id ? novaVacina : v))
-    }}
-  />,
-  document.body
-)}
+        <ModalVacina
+          animalId={vacina.animalId}   // <-- AGORA FUNCIONA normal
+          vacina={vacina}
+          fechar={() => setAbrirEditar(false)}
+          onAtualizar={(novaVacina) => {
+            setVacinas(vacinas.map(v => v.id === novaVacina.id ? novaVacina : v))
+          }}
+        />,
+        document.body
+      )}
     </>
   );
 }
