@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 import { AcompanhamentoI } from "@/utils/types/acompanhamento";
 import { VacinaI } from "@/utils/types/vacinas";
 import ModalRegistrarVisita from "./modalVisita";
@@ -36,12 +37,15 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
       });
 
       if (!res.ok) throw new Error("Erro ao buscar acompanhamentos");
+
       const data: AcompanhamentoI[] = await res.json();
       setAcompanhamentos(data);
 
     } catch (err) {
       console.error("Erro ao buscar acompanhamentos:", err);
       setAcompanhamentos([]);
+
+      Swal.fire("Erro!", "Erro ao buscar acompanhamentos.", "error");
     }
   };
 
@@ -58,12 +62,15 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
       });
 
       if (!res.ok) throw new Error("Erro ao buscar vacinas");
+
       const data: VacinaI[] = await res.json();
       setVacinas(data);
 
     } catch (err) {
       console.error("Erro ao buscar vacinas:", err);
       setVacinas([]);
+
+      Swal.fire("Erro!", "Erro ao buscar vacinas.", "error");
     }
   };
 
@@ -95,7 +102,22 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
   // =============================
   async function alterarStatus(novoStatus: "Concluida" | "Cancelada") {
     const token = Cookies.get("admin_logado_token");
-    if (!token) return alert("Token inválido!");
+
+    if (!token) {
+      Swal.fire("Erro!", "Token inválido. Faça login novamente.", "error");
+      return;
+    }
+
+    const confirmar = await Swal.fire({
+      title: `Confirmar alteração?`,
+      text: `Tem certeza que deseja marcar esta adoção como ${novoStatus}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim",
+      cancelButtonText: "Cancelar"
+    });
+
+    if (!confirmar.isConfirmed) return;
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/adocoes/${adocaoId}/status`, {
@@ -109,17 +131,22 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
 
       if (!res.ok) {
         const erro = await res.json();
-        alert(erro.erro || "Erro ao alterar status.");
+        Swal.fire("Erro!", erro.erro || "Erro ao alterar status.", "error");
         return;
       }
 
-      alert(`Adoção ${novoStatus.toLowerCase()} com sucesso!`);
+      Swal.fire(
+        "Status atualizado!",
+        `A adoção agora está ${novoStatus.toLowerCase()}.`,
+        "success"
+      );
+
       fetchAcompanhamentos();
       fetchVacinas();
 
     } catch (error) {
       console.error("Erro ao alterar status:", error);
-      alert("Erro inesperado.");
+      Swal.fire("Erro!", "Erro inesperado.", "error");
     }
   }
 
@@ -184,9 +211,9 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
                       acompanhamentos={acompanhamentos}
                       setAcompanhamentos={setAcompanhamentos}
                       abrirModalVisita={() => abrirModalEditar(a)}
-                      abrirModalVacina={abrirModalVacinaItem} 
-                      statusAdocao={statusAdocao}                
-                      />
+                      abrirModalVacina={abrirModalVacinaItem}
+                      statusAdocao={statusAdocao}
+                    />
                   ))}
                 </tbody>
               </table>
@@ -195,6 +222,7 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
 
           {/* VACINAS */}
           <h3 className="text-xl font-semibold mb-2">Vacinas Aplicadas</h3>
+
           {vacinas.length === 0 ? (
             <p className="text-gray-500 text-sm mb-4">Nenhuma vacina aplicada.</p>
           ) : (
