@@ -117,9 +117,10 @@ export default function ControleAdocoes() {
 
       {adocaoSelecionada && (
         <ModalAcompanhamentos
-          adocaoId={adocaoSelecionada.id}
-          fechar={() => setAdocaoSelecionada(null)}
-        />
+  adocaoId={adocaoSelecionada.id}
+  statusAdocao={adocaoSelecionada.status as "Ativa" | "Concluida" | "Cancelada"} 
+  fechar={() => setAdocaoSelecionada(null)}
+/>
       )}
     </div>
   )
