@@ -36,6 +36,8 @@ export default function CadAnimais() {
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          
+          {/* HEADERS COM CAMPOS ATUALIZADOS */}
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">Foto</th>
@@ -44,6 +46,8 @@ export default function CadAnimais() {
               <th scope="col" className="px-6 py-3">Idade</th>
               <th scope="col" className="px-6 py-3">Porte</th>
               <th scope="col" className="px-6 py-3">Sexo</th>
+              <th scope="col" className="px-6 py-3">Castrado</th>        {/* NOVO */}
+              <th scope="col" className="px-6 py-3">Disponível</th>      {/* NOVO */}
               <th scope="col" className="px-6 py-3">Ações</th>
             </tr>
           </thead>
