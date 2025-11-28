@@ -15,14 +15,12 @@ export default function ItemAnimal({
   animal,
   setAnimalSelecionado,
 }: ListaAnimalProps) {
-
   return (
     <tr
       key={animal.id}
       className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 
                  border-b dark:border-gray-700 hover:bg-gray-100 transition-colors duration-150"
     >
-      {/* FOTO */}
       <th
         scope="row"
         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -36,26 +34,12 @@ export default function ItemAnimal({
         />
       </th>
 
-      {/* DADOS */}
       <td className="px-6 py-4">{animal.nome}</td>
       <td className="px-6 py-4">{animal.especie.nome}</td>
       <td className="px-6 py-4">{animal.idade}</td>
       <td className="px-6 py-4">{animal.porte}</td>
-
-      {/* SEXO */}
       <td className="px-6 py-4">{animal.sexo}</td>
 
-      {/* CASTRADO (Sim / Não) */}
-      <td className="px-6 py-4">
-        {animal.castracao ? "Sim" : "Não"}
-      </td>
-
-      {/* DISPONÍVEL (Sim / Não) */}
-      <td className="px-6 py-4">
-        {animal.disponivel ? "Sim" : "Não"}
-      </td>
-
-      {/* AÇÕES */}
       <td className="px-6 py-4 text-center">
         <FaEdit
           className="text-2xl text-blue-600 hover:text-blue-800 cursor-pointer transition-transform transform hover:scale-110"
