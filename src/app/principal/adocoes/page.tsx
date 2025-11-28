@@ -91,7 +91,7 @@ export default function ControleAdocoes() {
                       className={`px-2 py-1 rounded-full text-xs font-semibold ${
                         adocao.status === "Ativa"
                           ? "bg-green-100 text-green-800"
-                          : adocao.status === "Concluída"
+                          : adocao.status === "Concluida"
                           ? "bg-blue-100 text-blue-800"
                           : "bg-red-100 text-red-800"
                       }`}
