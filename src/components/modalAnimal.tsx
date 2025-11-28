@@ -150,6 +150,8 @@ export default function ModalAnimal({ animal, fechar }: Props) {
             <p><strong>Porte:</strong> {animal.porte}</p>
             <p><strong>Sexo:</strong> {animal.sexo}</p>
             <p><strong>Disponível:</strong> {disponivel ? "Sim" : "Não"}</p>
+            <p><strong>Castrado:</strong> {animal.castracao ? "Sim" : "Não"}</p>
+            
           </div>
 
           <div className="grid grid-cols-2 gap-2 mt-6">
