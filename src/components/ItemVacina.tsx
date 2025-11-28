@@ -73,16 +73,16 @@ export default function ItemVacina({ vacina, vacinas, setVacinas, animalId }: It
       </tr>
 
       {abrirEditar && createPortal(
-        <ModalVacina
-          animalId={animalId}
-          vacina={vacina}
-          fechar={() => setAbrirEditar(false)}
-          onAtualizar={(novaVacina) => {
-            setVacinas(vacinas.map(v => v.id === novaVacina.id ? novaVacina : v))
-          }}
-        />,
-        document.body
-      )}
+  <ModalVacina
+    animalId={vacina.animalId}  // <-- CORRIGIDO
+    vacina={vacina}
+    fechar={() => setAbrirEditar(false)}
+    onAtualizar={(novaVacina) => {
+      setVacinas(vacinas.map(v => v.id === novaVacina.id ? novaVacina : v))
+    }}
+  />,
+  document.body
+)}
     </>
   );
 }
