@@ -93,7 +93,7 @@ export default function ModalAcompanhamentos({ adocaoId, fechar }: Props) {
     if (!token) return alert("Token inválido!");
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/adocao/${adocaoId}/status`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/adocoes/${adocaoId}/status`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
