@@ -5,6 +5,7 @@ import { createPortal } from "react-dom"
 import { AnimalI } from "@/utils/types/animais"
 import Image from "next/image"
 import Cookies from "js-cookie"
+import Swal from "sweetalert2"
 import ModalEditarAnimal from "./modalEditarAnimal"
 
 interface Props {
@@ -19,6 +20,7 @@ export default function ModalAnimal({ animal, fechar }: Props) {
 
   async function alternarDisponibilidade() {
     setLoading(true)
+
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/animais/${animal.id}`, {
         method: "PATCH",
@@ -28,11 +30,22 @@ export default function ModalAnimal({ animal, fechar }: Props) {
         },
         body: JSON.stringify({ disponivel: !disponivel }),
       })
+
       if (response.ok) {
         setDisponivel(!disponivel)
-        alert(`Animal agora está ${!disponivel ? "disponível" : "indisponível"} para adoção.`)
+
+        Swal.fire({
+          icon: "success",
+          title: "Sucesso!",
+          text: `Animal agora está ${!disponivel ? "disponível" : "indisponível"} para adoção.`,
+          confirmButtonColor: "#3085d6",
+        })
       } else {
-        alert("Erro ao alterar disponibilidade.")
+        Swal.fire({
+          icon: "error",
+          title: "Erro",
+          text: "Erro ao alterar disponibilidade.",
+        })
       }
     } finally {
       setLoading(false)
@@ -40,8 +53,21 @@ export default function ModalAnimal({ animal, fechar }: Props) {
   }
 
   async function excluirAnimal() {
-    if (!confirm(`Tem certeza que deseja excluir ${animal.nome}?`)) return
+    const confirmacao = await Swal.fire({
+      title: `Excluir ${animal.nome}?`,
+      text: "Essa ação não poderá ser desfeita.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, excluir",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    })
+
+    if (!confirmacao.isConfirmed) return
+
     setLoading(true)
+
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/animais/${animal.id}`, {
         method: "DELETE",
@@ -49,18 +75,28 @@ export default function ModalAnimal({ animal, fechar }: Props) {
           Authorization: "Bearer " + (Cookies.get("admin_logado_token") as string),
         },
       })
+
       if (response.ok) {
-        alert("Animal excluído com sucesso.")
+        Swal.fire({
+          icon: "success",
+          title: "Excluído!",
+          text: "Animal excluído com sucesso.",
+          confirmButtonColor: "#3085d6",
+        })
+
         fechar()
       } else {
-        alert("Erro ao excluir o animal.")
+        Swal.fire({
+          icon: "error",
+          title: "Erro",
+          text: "Erro ao excluir o animal.",
+        })
       }
     } finally {
       setLoading(false)
     }
   }
 
-  // Função para renderizar modal via Portal
   const renderPortal = (modal: JSX.Element) => createPortal(modal, document.body)
 
   return (
@@ -99,6 +135,7 @@ export default function ModalAnimal({ animal, fechar }: Props) {
             >
               ✏️ Editar
             </button>
+
             <button
               onClick={alternarDisponibilidade}
               disabled={loading}
