@@ -177,15 +177,16 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
                 </thead>
                 <tbody>
                   {acompanhamentos.map(a => (
-                    <ItemAcompanhamento
-                      key={a.id}
-                      acompanhamento={a}
-                      acompanhamentos={acompanhamentos}
-                      setAcompanhamentos={setAcompanhamentos}
-                      abrirModalVisita={() => abrirModalEditar(a)}
-                      abrirModalVacina={abrirModalVacinaItem}
-                    />
-                  ))}
+                  <ItemAcompanhamento
+                    key={a.id}
+                    acompanhamento={a}
+                    acompanhamentos={acompanhamentos}
+                    setAcompanhamentos={setAcompanhamentos}
+                    abrirModalVisita={() => abrirModalEditar(a)}
+                    abrirModalVacina={abrirModalVacinaItem}
+                    statusAdocao={statusAdocao}    
+                  />
+                ))}
                 </tbody>
               </table>
             </div>
