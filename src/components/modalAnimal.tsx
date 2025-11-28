@@ -18,6 +18,9 @@ export default function ModalAnimal({ animal, fechar }: Props) {
   const [disponivel, setDisponivel] = useState(animal.disponivel)
   const [abrirEdicao, setAbrirEdicao] = useState(false)
 
+  // =========================================================
+  // ALTERAR DISPONIBILIDADE — exibindo erro real do backend
+  // =========================================================
   async function alternarDisponibilidade() {
     setLoading(true)
 
@@ -31,6 +34,8 @@ export default function ModalAnimal({ animal, fechar }: Props) {
         body: JSON.stringify({ disponivel: !disponivel }),
       })
 
+      const resultado = await response.json()
+
       if (response.ok) {
         setDisponivel(!disponivel)
 
@@ -43,15 +48,25 @@ export default function ModalAnimal({ animal, fechar }: Props) {
       } else {
         Swal.fire({
           icon: "error",
-          title: "Erro",
-          text: "Erro ao alterar disponibilidade.",
+          title: "Erro ao alterar disponibilidade",
+          text: resultado.erro || "Erro desconhecido.",
         })
       }
+    } catch (error) {
+      console.error(error)
+      Swal.fire({
+        icon: "error",
+        title: "Erro inesperado",
+        text: "Não foi possível alterar a disponibilidade.",
+      })
     } finally {
       setLoading(false)
     }
   }
 
+  // =========================================================
+  // EXCLUIR ANIMAL — exibindo erro real do backend
+  // =========================================================
   async function excluirAnimal() {
     const confirmacao = await Swal.fire({
       title: `Excluir ${animal.nome}?`,
@@ -76,6 +91,8 @@ export default function ModalAnimal({ animal, fechar }: Props) {
         },
       })
 
+      const resultado = await response.json()
+
       if (response.ok) {
         Swal.fire({
           icon: "success",
@@ -88,10 +105,17 @@ export default function ModalAnimal({ animal, fechar }: Props) {
       } else {
         Swal.fire({
           icon: "error",
-          title: "Erro",
-          text: "Erro ao excluir o animal.",
+          title: "Erro ao excluir animal",
+          text: resultado.erro || "Erro desconhecido.",
         })
       }
+    } catch (error) {
+      console.error(error)
+      Swal.fire({
+        icon: "error",
+        title: "Erro inesperado",
+        text: "Não foi possível excluir o animal.",
+      })
     } finally {
       setLoading(false)
     }
