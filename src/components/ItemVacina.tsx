@@ -11,10 +11,11 @@ interface ItemVacinaProps {
   vacina: VacinaI;
   vacinas: VacinaI[];
   setVacinas: React.Dispatch<React.SetStateAction<VacinaI[]>>;
+  statusAdocao: "Ativa" | "Concluida" | "Cancelada";
 }
 
-export default function ItemVacina({ vacina, vacinas, setVacinas }: ItemVacinaProps) {
-  const [abrirEditar, setAbrirEditar] = useState(false);  // <-- ESSENCIAL
+export default function ItemVacina({ vacina, vacinas, setVacinas, statusAdocao }: ItemVacinaProps) {
+  const [abrirEditar, setAbrirEditar] = useState(false);
 
   async function excluirVacina(vacinaId: number) {
     const result = await Swal.fire({
@@ -42,7 +43,7 @@ export default function ItemVacina({ vacina, vacinas, setVacinas }: ItemVacinaPr
         Swal.fire('Excluída!', 'Vacina excluída com sucesso.', 'success');
         setVacinas(vacinas.filter(v => v.id !== vacinaId));
       } else {
-        Swal.fire('Erro', 'Erro ao excluir vacina', 'error');
+       Swal.fire('Erro', 'Erro ao excluir vacina', 'error');
       }
     } catch (error) {
       console.error(error);
@@ -57,23 +58,43 @@ export default function ItemVacina({ vacina, vacinas, setVacinas }: ItemVacinaPr
         <td className="px-6 py-4">{new Date(vacina.dataAplicacao).toLocaleDateString()}</td>
         <td className="px-6 py-4">{vacina.aplicadoPor || "-"}</td>
         <td className="px-6 py-4">{vacina.observacoes || "-"}</td>
+
         <td className="px-6 py-4 flex gap-2">
+
+          {/* EDITAR */}
           <TiEdit
-            className="text-2xl text-blue-600 cursor-pointer"
-            title="Editar vacina"
-            onClick={() => setAbrirEditar(true)}
+            className={`text-2xl ${
+              statusAdocao === "Ativa" ? "text-blue-600 cursor-pointer" : "text-gray-400 cursor-not-allowed"
+            }`}
+            title={statusAdocao === "Ativa" ? "Editar vacina" : "Edição desabilitada — adoção não ativa"}
+            onClick={() => {
+              if (statusAdocao !== "Ativa") {
+                return Swal.fire("Ação não permitida", "A adoção não está ativa.", "warning");
+              }
+              setAbrirEditar(true);
+            }}
           />
+
+          {/* EXCLUIR */}
           <TiDeleteOutline
-            className="text-2xl text-red-600 cursor-pointer"
-            title="Excluir vacina"
-            onClick={() => excluirVacina(vacina.id)}
+            className={`text-2xl ${
+              statusAdocao === "Ativa" ? "text-red-600 cursor-pointer" : "text-gray-400 cursor-not-allowed"
+            }`}
+            title={statusAdocao === "Ativa" ? "Excluir vacina" : "Exclusão desabilitada — adoção não ativa"}
+            onClick={() => {
+              if (statusAdocao !== "Ativa") {
+                return Swal.fire("Ação não permitida", "A adoção não está ativa.", "warning");
+              }
+              excluirVacina(vacina.id);
+            }}
           />
+
         </td>
       </tr>
 
       {abrirEditar && createPortal(
         <ModalVacina
-          animalId={vacina.animalId}   // <-- AGORA FUNCIONA normal
+          animalId={vacina.animalId}
           vacina={vacina}
           fechar={() => setAbrirEditar(false)}
           onAtualizar={(novaVacina) => {

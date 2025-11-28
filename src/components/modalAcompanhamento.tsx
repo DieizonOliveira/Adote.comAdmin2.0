@@ -13,7 +13,7 @@ import { createPortal } from "react-dom";
 interface Props {
   adocaoId: number;
   fechar: () => void;
-  statusAdocao: "Ativa" | "Concluida" | "Cancelada";   // <-- ADICIONADO
+  statusAdocao: "Ativa" | "Concluida" | "Cancelada";
 }
 
 export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }: Props) {
@@ -34,9 +34,11 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
       const res = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/acompanhamento?adocaoId=${adocaoId}`, {
         headers: { Authorization: "Bearer " + token }
       });
+
       if (!res.ok) throw new Error("Erro ao buscar acompanhamentos");
       const data: AcompanhamentoI[] = await res.json();
       setAcompanhamentos(data);
+
     } catch (err) {
       console.error("Erro ao buscar acompanhamentos:", err);
       setAcompanhamentos([]);
@@ -54,9 +56,11 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
       const res = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/vacinas-aplicadas?adocaoId=${adocaoId}`, {
         headers: { Authorization: "Bearer " + token }
       });
+
       if (!res.ok) throw new Error("Erro ao buscar vacinas");
       const data: VacinaI[] = await res.json();
       setVacinas(data);
+
     } catch (err) {
       console.error("Erro ao buscar vacinas:", err);
       setVacinas([]);
@@ -110,7 +114,6 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
       }
 
       alert(`Adoção ${novoStatus.toLowerCase()} com sucesso!`);
-
       fetchAcompanhamentos();
       fetchVacinas();
 
@@ -136,7 +139,6 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
 
           {/* BOTÕES DE AÇÃO */}
           <div className="flex justify-end mb-4 gap-2">
-
             <button
               onClick={abrirModalNovo}
               className="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 text-sm"
@@ -157,7 +159,6 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
             >
               ✔ Concluir Adoção
             </button>
-
           </div>
 
           {/* TABELA DE ACOMPANHAMENTOS */}
@@ -165,8 +166,8 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
             <p className="text-gray-500 text-sm">Nenhum acompanhamento registrado.</p>
           ) : (
             <div className="overflow-x-auto mb-6">
-              <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <table className="w-full text-sm text-left text-gray-500">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                   <tr>
                     <th className="px-6 py-3">Data</th>
                     <th className="px-6 py-3">Observações</th>
@@ -177,16 +178,14 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
                 </thead>
                 <tbody>
                   {acompanhamentos.map(a => (
-                  <ItemAcompanhamento
-                    key={a.id}
-                    acompanhamento={a}
-                    acompanhamentos={acompanhamentos}
-                    setAcompanhamentos={setAcompanhamentos}
-                    abrirModalVisita={() => abrirModalEditar(a)}
-                    abrirModalVacina={abrirModalVacinaItem}
-                    statusAdocao={statusAdocao}    
-                  />
-                ))}
+                    <ItemAcompanhamento
+                      key={a.id}
+                      acompanhamento={a}
+                      acompanhamentos={acompanhamentos}
+                      setAcompanhamentos={setAcompanhamentos}
+                      abrirModalVisita={() => abrirModalEditar(a)}
+                      abrirModalVacina={abrirModalVacinaItem} statusAdocao={"Ativa"}                    />
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -198,8 +197,8 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
             <p className="text-gray-500 text-sm mb-4">Nenhuma vacina aplicada.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <table className="w-full text-sm text-left text-gray-500">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                   <tr>
                     <th className="px-6 py-3">Nome</th>
                     <th className="px-6 py-3">Data Aplicação</th>
@@ -215,7 +214,7 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
                       vacina={v}
                       vacinas={vacinas}
                       setVacinas={setVacinas}
-                      
+                      statusAdocao={statusAdocao}
                     />
                   ))}
                 </tbody>
@@ -231,7 +230,7 @@ export default function ModalAcompanhamentos({ adocaoId, fechar, statusAdocao }:
           <ModalRegistrarVisita
             adocaoId={adocaoId}
             acompanhamento={acompanhamentoSelecionado || undefined}
-            statusAdocao={statusAdocao}         
+            statusAdocao={statusAdocao}
             fechar={() => {
               setAbrirRegistrar(false);
               setAcompanhamentoSelecionado(null);
