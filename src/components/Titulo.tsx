@@ -1,12 +1,13 @@
 'use client'
-import Cookies from "js-cookie"
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { FiUsers } from "react-icons/fi"
-import Image from 'next/image';
 
-export function Titulo() {
-  const [adminNome, setAdminNome] = useState<string>("")
+import Cookies from "js-cookie"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import { FiUsers, FiMenu } from "react-icons/fi"
+import Image from "next/image"
+
+export function Titulo({ abrirMenuMobile }: { abrirMenuMobile: () => void }) {
+  const [adminNome, setAdminNome] = useState("")
 
   useEffect(() => {
     const nome = Cookies.get("admin_logado_nome")
@@ -14,26 +15,39 @@ export function Titulo() {
   }, [])
 
   return (
-    <nav className="bg-blue-400 border-gray-200 dark:bg-gray-900 flex flex-wrap justify-between fixed top-0 left-0 w-full z-50">
-      <div className="flex flex-wrap justify-between max-w-screen-xl p-4">
-        <Link href="/principal" className="flex items-center space-x-3 rtl:space-x-reverse">
-          
-          <Image
-            src="/logo.png"
-            alt="Abrigo"
-            width={64}
-            height={64}
-            className="h-16 w-auto"
-          />
+    <nav className="
+      bg-blue-400 
+      dark:bg-gray-900 
+      fixed top-0 left-0 w-full z-50 
+      flex items-center justify-between
+      px-4 h-20
+    ">
 
-          <span className="self-center text-3xl font-semibold whitespace-nowrap dark:text-white">
-            Adote.com - Acesso Administrativo
-          </span>
-        </Link>
-      </div>
+      {/* Botão Mobile */}
+      <button
+        className="text-white text-3xl sm:hidden"
+        onClick={abrirMenuMobile}
+      >
+        <FiMenu />
+      </button>
 
-      {/* Nome do admin segue o mesmo padrão: dark:text-white */}
-      <div className="flex me-4 items-center font-bold text-gray-900 dark:text-white">
+      {/* Logo + Título */}
+      <Link href="/principal" className="flex items-center space-x-3">
+        <Image
+          src="/logo.png"
+          alt="Abrigo"
+          width={64}
+          height={64}
+          className="h-16 w-auto"
+        />
+
+        <span className="text-2xl sm:text-3xl font-semibold whitespace-nowrap text-gray-900 dark:text-white">
+          Adote.com - Acesso Administrativo
+        </span>
+      </Link>
+
+      {/* Nome admin */}
+      <div className="flex items-center font-bold text-gray-900 dark:text-white">
         <FiUsers className="mr-2" />
         {adminNome}
       </div>
