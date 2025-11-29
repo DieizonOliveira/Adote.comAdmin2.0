@@ -23,7 +23,8 @@ export function MenuLateral() {
     <aside id="default-sidebar" className="fixed mt-24 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
       <div className="h-full px-3 py-4 overflow-y-auto bg-blue-190 dark:bg-blue-190">
         <ul className="space-y-2 font-medium">
-        <li>
+
+          <li>
             <Link href="/principal" className="flex items-center p-2">
               <span className="h-5 text-gray-600 text-2xl">
                 <IoMdHome />
@@ -31,6 +32,7 @@ export function MenuLateral() {
               <span className="ms-2 mt-1">O Abrigo</span>
             </Link>
           </li>
+
           <li>
             <Link href="/principal/animais" className="flex items-center p-2">
               <span className="h-5 text-gray-600 text-2xl">
@@ -39,41 +41,43 @@ export function MenuLateral() {
               <span className="ms-2 mt-1">Cadastro de Animais</span>
             </Link>
           </li>
+
           <li>
-          <Link href="/principal/adotantes" className="flex items-center p-2">
+            <Link href="/principal/adotantes" className="flex items-center p-2">
               <span className="h-5 text-gray-600 text-2xl">
                 <FaUsers />
               </span>
-              <span className="ms-2 mt-1">Controle de Adotantes</span>
+              <span className="ms-2 mt-1">Cadastro de Adotantes</span>
             </Link>
           </li>
+
+          {/* ➕ Novo item adicionado aqui */}
           <li>
-          <Link href="/principal/pedidos" className="flex items-center p-2 cursor-pointer">
+            <Link href="/principal/admins" className="flex items-center p-2">
+              <span className="h-5 text-gray-600 text-2xl">
+                <FaUsers />
+              </span>
+              <span className="ms-2 mt-1">Cadastro de Administradores</span>
+            </Link>
+          </li>
+
+          <li>
+            <Link href="/principal/pedidos" className="flex items-center p-2 cursor-pointer">
               <span className="h-5 text-gray-600 text-2xl">
                 <RiInboxArchiveFill />
               </span>
               <span className="ms-2 mt-1">Pedidos de Adoção</span>
             </Link>
           </li>
+
           <li>
-  <Link href="/principal/adocoes" className="flex items-center p-2">
-    <span className="h-5 text-gray-600 text-2xl">
-      <FaDog />
-    </span>
-    <span className="ms-2 mt-1">Adoções</span>
-  </Link>
-</li>
-
-
-{/* <li>
-  <Link href="/principal/vacinasAplicadas" className="flex items-center p-2">
-    <span className="h-5 text-gray-600 text-2xl">
-      <RiInboxArchiveFill />
-    </span>
-    <span className="ms-2 mt-1">Vacinas Aplicadas</span>
-  </Link>
-</li> */}
-
+            <Link href="/principal/adocoes" className="flex items-center p-2">
+              <span className="h-5 text-gray-600 text-2xl">
+                <FaDog />
+              </span>
+              <span className="ms-2 mt-1">Adoções</span>
+            </Link>
+          </li>
 
           <li>
             <span className="flex items-center p-2 cursor-pointer">
@@ -83,6 +87,7 @@ export function MenuLateral() {
               <span className="ms-2 mt-1" onClick={adminSair}>Sair do Sistema</span>
             </span>
           </li>
+
         </ul>
       </div>
     </aside>
