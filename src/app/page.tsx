@@ -22,24 +22,32 @@ export default function Home() {
   }, [setFocus])
 
   async function verificaLogin(data: Inputs) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/admins/login`, {
-      method: "POST",
-      headers: {"Content-type": "Application/json"},
-      body: JSON.stringify({email: data.email, senha: data.senha})
-    })
+  const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/admins/login`, {
+    method: "POST",
+    headers: {"Content-type": "Application/json"},
+    body: JSON.stringify({ email: data.email, senha: data.senha })
+  })
 
-    if (response.status == 200) {
-      const admin = await response.json()
+  if (response.status == 200) {
+    const admin = await response.json()
 
-      Cookies.set("admin_logado_id", admin.id)
-      Cookies.set("admin_logado_nome", admin.nome)
-      Cookies.set("admin_logado_token", admin.token)
+    Cookies.set("admin_logado_id", admin.id)
+    Cookies.set("admin_logado_nome", admin.nome)
+    Cookies.set("admin_logado_token", admin.token)
 
-      router.push("/principal")      
-    } else if (response.status == 400) {
-      toast.error("Erro... Login ou senha incorretos")
-    } 
+    router.push("/principal")      
+  } 
+  
+  else if (response.status == 400) {
+    toast.error("Erro... Login ou senha incorretos")
+  } 
+  
+  // 👇 AQUI: mostrar exatamente o erro retornado pela API
+  else if (response.status == 403) {
+    const erroAPI = await response.json()
+    toast.error(erroAPI.erro || "Acesso não permitido")
   }
+}
 
   return (
     <main className="max-w-screen-xl flex flex-col items-center mx-auto p-6">
@@ -47,7 +55,7 @@ export default function Home() {
         src="/logo.png"
         alt="Revenda"
         width={240}
-        height={240} // altura proporcional, ajuste conforme o logo
+        height={240} 
         className="d-block"
       />
 
