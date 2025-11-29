@@ -78,7 +78,7 @@ export default function Home() {
 
   <div className="max-w-sm bg-white shadow-md rounded-xl p-8 border border-gray-200 w-full">
 
-    <h1 className="text-3xl font-bold mb-6 text-center">Admin: Adote.com</h1>
+    <h1 className="text-3xl font-bold mb-6 text-center">Administrativo Adote.com</h1>
 
     <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(verificaLogin)}>
 
