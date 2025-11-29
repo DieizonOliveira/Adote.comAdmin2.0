@@ -39,8 +39,45 @@ export default function ModalEditarAdmin({ admin, fechar, onAtualizar }: Props) 
     });
   };
 
+  // 🔥 AQUI FAZEMOS TODA A VALIDAÇÃO ANTES DO PATCH
+  function montarBodyParaEnvio() {
+    const body: any = {};
+
+    // Envia somente se mudou e não é vazio
+    if (nome.trim() && nome.trim() !== admin.nome) {
+      body.nome = nome.trim();
+    }
+
+    if (email.trim() && email.trim() !== admin.email) {
+      body.email = email.trim();
+    }
+
+    // Ajusta role "adm" → "admin"
+    const roleTratada =
+      role === "adm" ? "admin" : role === "veterinario" ? "veterinario" : "master";
+
+    if (roleTratada !== admin.role) {
+      body.role = roleTratada;
+    }
+
+    // Ativo é boolean
+    if (ativo !== admin.ativo) {
+      body.ativo = ativo;
+    }
+
+    return body;
+  }
+
   async function salvar() {
     setLoading(true);
+
+    const body = montarBodyParaEnvio();
+
+    if (Object.keys(body).length === 0) {
+      toast("warning", "Nenhuma alteração encontrada.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch(
@@ -51,12 +88,7 @@ export default function ModalEditarAdmin({ admin, fechar, onAtualizar }: Props) 
             "Content-Type": "application/json",
             Authorization: "Bearer " + token,
           },
-          body: JSON.stringify({
-            nome,
-            email,
-            role,
-            ativo,
-          }),
+          body: JSON.stringify(body),
         }
       );
 
@@ -74,7 +106,7 @@ export default function ModalEditarAdmin({ admin, fechar, onAtualizar }: Props) 
       if (onAtualizar) onAtualizar(adminAtualizado);
 
       fechar();
-    } catch  {
+    } catch {
       toast("error", "Erro de conexão com o servidor.");
     } finally {
       setLoading(false);
