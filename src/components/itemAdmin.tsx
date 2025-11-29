@@ -42,8 +42,7 @@ export default function ItemAdmin({ admin, admins, setAdmins }: Props) {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            Authorization:
-              "Bearer " + (Cookies.get("admin_logado_token") || ""),
+            Authorization: "Bearer " + (Cookies.get("admin_logado_token") || ""),
           },
         }
       );
@@ -68,8 +67,7 @@ export default function ItemAdmin({ admin, admins, setAdmins }: Props) {
           text: "O administrador não pôde ser excluído.",
         });
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
       await MySwal.fire({
         icon: "error",
         title: "Erro de conexão",
@@ -80,7 +78,7 @@ export default function ItemAdmin({ admin, admins, setAdmins }: Props) {
     setLoading(false);
   }
 
-  // Atualiza apenas um admin na lista (depois do modal salvar)
+  // Atualiza somente o admin que foi editado
   function atualizarAdmin(adminAtualizado: AdminI) {
     const novaLista = admins.map((a) =>
       a.id === adminAtualizado.id ? adminAtualizado : a
@@ -110,14 +108,14 @@ export default function ItemAdmin({ admin, admins, setAdmins }: Props) {
         </td>
 
         <td className="px-6 py-4 flex gap-3">
-          {/* EDITAR */}
+          {/* Editar */}
           <TiEdit
             className="text-3xl text-blue-600 cursor-pointer"
             title="Editar"
             onClick={() => setAbrirModal(true)}
           />
 
-          {/* EXCLUIR */}
+          {/* Excluir */}
           <TiDeleteOutline
             className={`text-3xl text-red-600 cursor-pointer ${
               loading ? "opacity-50 cursor-not-allowed" : ""
@@ -128,7 +126,6 @@ export default function ItemAdmin({ admin, admins, setAdmins }: Props) {
         </td>
       </tr>
 
-      {/* Modal de Edição */}
       {abrirModal && (
         <ModalEditarAdmin
           admin={admin}
