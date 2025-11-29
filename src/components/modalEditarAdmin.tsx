@@ -74,7 +74,7 @@ export default function ModalEditarAdmin({ admin, fechar, onAtualizar }: Props) 
       if (onAtualizar) onAtualizar(adminAtualizado);
 
       fechar();
-    } catch (error) {
+    } catch  {
       toast("error", "Erro de conexão com o servidor.");
     } finally {
       setLoading(false);
