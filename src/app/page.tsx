@@ -40,7 +40,7 @@ export default function Home() {
 
       // ⚠️ SE ESTIVER USANDO SENHA PADRÃO → REDIRECIONA PARA TROCA OBRIGATÓRIA
       if (admin.senhaPadrao) {
-        router.push("/alterar-senha-obrigatorio")
+        router.push("/principal/alterar-senha-obrigatorio")
         return
       }
 
