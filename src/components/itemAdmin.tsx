@@ -88,7 +88,7 @@ export default function ItemAdmin({ admin, admins, setAdmins }: Props) {
         <td className="px-6 py-4">{admin.email}</td>
 
         <td className="px-6 py-4">
-          {admin.status ? (
+          {admin.ativo ? (
             <span className="px-2 py-1 text-xs font-semibold text-green-600 bg-green-100 rounded">
               Ativo
             </span>
