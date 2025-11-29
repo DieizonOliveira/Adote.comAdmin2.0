@@ -3,21 +3,43 @@
 import { useEffect, useState } from "react";
 import ItemAdmin from "@/components/itemAdmin";
 import { AdminI } from "@/utils/types/admins";
+import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 function CadAdmins() {
   const [admins, setAdmins] = useState<AdminI[]>([]);
 
   useEffect(() => {
     async function getAdmins() {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/admins`);
-        const dados = await response.json();
 
+      const token = Cookies.get("admin_logado_token") || "";
+
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/admins`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          }
+        });
+
+        if (response.status === 401) {
+          await Swal.fire({
+            icon: "error",
+            title: "Acesso não autorizado",
+            text: "Você precisa fazer login novamente."
+          });
+          return;
+        }
+
+        const dados = await response.json();
         setAdmins(Array.isArray(dados) ? dados : dados.admins ?? []);
+
       } catch (error) {
         console.log("Erro ao carregar admins", error);
       }
     }
+
     getAdmins();
   }, []);
 
@@ -31,9 +53,9 @@ function CadAdmins() {
   ));
 
   return (
-    <div className="m-4 mt-24">
-      <div className="flex justify-between">
-        <h1 className="mb-4 text-2xl font-bold leading-none tracking-tight text-gray-900 md:text-3xl lg:text-4xl dark:text-white">
+    <div className='m-4 mt-24'>
+      <div className='flex justify-between'>
+        <h1 className="mb-4 text-2xl font-bold dark:text-white">
           Cadastro de Admins
         </h1>
       </div>
