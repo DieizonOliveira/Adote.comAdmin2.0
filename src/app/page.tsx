@@ -134,12 +134,7 @@ export default function Home() {
             Entrar
           </button>
 
-          <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-            Não tem cadastro?
-            <a href="/cadastro" className="font-medium text-primary-600 hover:underline dark:text-primary-500">
-              Criar conta
-            </a>
-          </p>
+          
 
         </form>
       </div>
