@@ -1,26 +1,45 @@
-"use client"
-import Cookies from "js-cookie"
-import { useRouter } from "next/navigation"
-import { IoExitOutline } from "react-icons/io5"
+"use client";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import { IoExitOutline } from "react-icons/io5";
 import { RiInboxArchiveFill } from "react-icons/ri";
-import { FaUsers, FaDog } from "react-icons/fa6"
+import { FaUsers, FaDog } from "react-icons/fa6";
 import { IoMdHome } from "react-icons/io";
-import Link from "next/link"
+import Link from "next/link";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 export function MenuLateral() {
-  const router = useRouter()
+  const router = useRouter();
 
-  function adminSair() {
-    if (confirm("Confirma Saída?")) {
-      Cookies.remove("admin_logado_id")
-      Cookies.remove("admin_logado_nome")
-      Cookies.remove("admin_logado_token")
-      router.replace("/")
-    }
+  async function adminSair() {
+    const result = await MySwal.fire({
+      title: "Sair do sistema?",
+      text: "Você será desconectado.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, sair",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) return;
+
+    Cookies.remove("admin_logado_id");
+    Cookies.remove("admin_logado_nome");
+    Cookies.remove("admin_logado_token");
+
+    router.replace("/");
   }
 
   return (
-    <aside id="default-sidebar" className="fixed mt-24 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+    <aside
+      id="default-sidebar"
+      className="fixed mt-24 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+      aria-label="Sidebar"
+    >
       <div className="h-full px-3 py-4 overflow-y-auto bg-blue-190 dark:bg-blue-190">
         <ul className="space-y-2 font-medium">
 
@@ -51,7 +70,6 @@ export function MenuLateral() {
             </Link>
           </li>
 
-          {/* ➕ Novo item adicionado aqui */}
           <li>
             <Link href="/principal/admins" className="flex items-center p-2">
               <span className="h-5 text-gray-600 text-2xl">
@@ -80,16 +98,16 @@ export function MenuLateral() {
           </li>
 
           <li>
-            <span className="flex items-center p-2 cursor-pointer">
+            <span className="flex items-center p-2 cursor-pointer" onClick={adminSair}>
               <span className="h-5 text-gray-600 text-2xl">
                 <IoExitOutline />
               </span>
-              <span className="ms-2 mt-1" onClick={adminSair}>Sair do Sistema</span>
+              <span className="ms-2 mt-1">Sair do Sistema</span>
             </span>
           </li>
 
         </ul>
       </div>
     </aside>
-  )
+  );
 }
