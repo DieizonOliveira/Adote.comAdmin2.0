@@ -4,8 +4,9 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { TiDeleteOutline } from "react-icons/ti";
+import { TiDeleteOutline, TiEdit } from "react-icons/ti";
 import { AdminI } from "@/utils/types/admins";
+import ModalEditarAdmin from "./modalEditarAdmin";
 
 const MySwal = withReactContent(Swal);
 
@@ -17,6 +18,7 @@ interface Props {
 
 export default function ItemAdmin({ admin, admins, setAdmins }: Props) {
   const [loading, setLoading] = useState(false);
+  const [abrirModal, setAbrirModal] = useState(false);
 
   async function excluirAdmin() {
     const confirmResult = await MySwal.fire({
@@ -78,6 +80,14 @@ export default function ItemAdmin({ admin, admins, setAdmins }: Props) {
     setLoading(false);
   }
 
+  // Atualiza apenas um admin na lista (depois do modal salvar)
+  function atualizarAdmin(adminAtualizado: AdminI) {
+    const novaLista = admins.map((a) =>
+      a.id === adminAtualizado.id ? adminAtualizado : a
+    );
+    setAdmins(novaLista);
+  }
+
   return (
     <>
       <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
@@ -99,7 +109,15 @@ export default function ItemAdmin({ admin, admins, setAdmins }: Props) {
           )}
         </td>
 
-        <td className="px-6 py-4 flex gap-2">
+        <td className="px-6 py-4 flex gap-3">
+          {/* EDITAR */}
+          <TiEdit
+            className="text-3xl text-blue-600 cursor-pointer"
+            title="Editar"
+            onClick={() => setAbrirModal(true)}
+          />
+
+          {/* EXCLUIR */}
           <TiDeleteOutline
             className={`text-3xl text-red-600 cursor-pointer ${
               loading ? "opacity-50 cursor-not-allowed" : ""
@@ -109,6 +127,15 @@ export default function ItemAdmin({ admin, admins, setAdmins }: Props) {
           />
         </td>
       </tr>
+
+      {/* Modal de Edição */}
+      {abrirModal && (
+        <ModalEditarAdmin
+          admin={admin}
+          fechar={() => setAbrirModal(false)}
+          onAtualizar={atualizarAdmin}
+        />
+      )}
     </>
   );
 }
