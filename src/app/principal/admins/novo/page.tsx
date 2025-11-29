@@ -24,8 +24,8 @@ export default function NovoAdmin() {
       nome,
       email,
       role,
-      senha: "@12345",   // ✔ senha padrão
-      ativo: true         // ✔ sempre ativo ao criar
+      senha: "@Senha12345",   // ✔ senha padrão
+      
     };
 
     try {
@@ -42,7 +42,7 @@ export default function NovoAdmin() {
         await MySwal.fire({
           icon: "success",
           title: "Administrador cadastrado!",
-          text: "A senha padrão é @12345",
+          text: "A senha padrão é @Senha12345",
           confirmButtonText: "OK",
         });
 
