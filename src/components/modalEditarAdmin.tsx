@@ -39,34 +39,35 @@ export default function ModalEditarAdmin({ admin, fechar, onAtualizar }: Props) 
     });
   };
 
-  // 🔥 AQUI FAZEMOS TODA A VALIDAÇÃO ANTES DO PATCH
-  function montarBodyParaEnvio() {
-    const body: any = {};
+  //VALIDAÇÃO ANTES DO PATCH
+ function montarBodyParaEnvio() {
+  const body: Partial<AdminI> = {};
 
-    // Envia somente se mudou e não é vazio
-    if (nome.trim() && nome.trim() !== admin.nome) {
-      body.nome = nome.trim();
-    }
-
-    if (email.trim() && email.trim() !== admin.email) {
-      body.email = email.trim();
-    }
-
-    // Ajusta role "adm" → "admin"
-    const roleTratada =
-      role === "adm" ? "admin" : role === "veterinario" ? "veterinario" : "master";
-
-    if (roleTratada !== admin.role) {
-      body.role = roleTratada;
-    }
-
-    // Ativo é boolean
-    if (ativo !== admin.ativo) {
-      body.ativo = ativo;
-    }
-
-    return body;
+  // Envia somente se mudou e não é vazio
+  if (nome.trim() && nome.trim() !== admin.nome) {
+    body.nome = nome.trim();
   }
+
+  if (email.trim() && email.trim() !== admin.email) {
+    body.email = email.trim();
+  }
+
+  // Ajusta role "adm" → "admin"
+  const roleTratada =
+    role === "adm" ? "admin" : role === "veterinario" ? "veterinario" : "master";
+
+  if (roleTratada !== admin.role) {
+    body.role = roleTratada;
+  }
+
+  // Ativo é boolean
+  if (ativo !== admin.ativo) {
+    body.ativo = ativo;
+  }
+
+  return body;
+}
+
 
   async function salvar() {
     setLoading(true);
